@@ -1,8 +1,9 @@
 package main
 
-// subayes : subject classification using bayesian filter
+// 2023/06 : cat : subayes : mail subject classification using bayesian filter
+//
 // v0.1 : working draft.
-// v0.2 : minlen words, better split func, default class
+// v0.2 : minlen words, better split func, default bayes class, +main_test.go
 
 import (
 	"bufio"
