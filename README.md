@@ -31,7 +31,7 @@ $ ./subayes.exe < testdata/2023-05  | grep Spam | wc -l
 58711
 
 $ wc -l 2023-05
-241662 2023-05 ( meaning 24% de Spam, WTF! )
+241662 2023-05 ( meaning 24% Spam, WTF! )
 
 ```
 
