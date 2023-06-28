@@ -14,7 +14,7 @@ Purpose of this filter is a learning filter able to sort spam subject lines.
 $ rm db/Spam db/Ham
 
 $ ./subayes.exe -learnHam -d testdata/Ham -v
-INFO classifier corpus :  [ Ham -> 0 items ] [ Spam -> 0 items ]
+INFO classifier corpus :  [ Ham -> 0 items ] [ Spam -> 0 items ] 
 INFO classifier corpus :  [ Ham -> 4623 items ] [ Spam -> 0 items ]
 
 $ ./subayes.exe -learnSpam -d testdata/esteban.txt -v
@@ -31,7 +31,7 @@ $ ./subayes.exe < testdata/2023-05  | grep Spam | wc -l
 58711
 
 $ wc -l 2023-05
-241662 2023-05 ( soit 4.11 % de Spam)
+241662 2023-05 ( meaning 24% de Spam, WTF! )
 
 ```
 
