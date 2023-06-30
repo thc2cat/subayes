@@ -68,7 +68,7 @@ func main() {
 
 		for scanner.Scan() { // read line per line
 			text := scanner.Text()
-			if len(text) > 3 { // Minimum 'Re:'
+			if len(text) > minlength { // Minimum 'Re: '
 				spl := removeDuplicate(split(text), minlength)
 				fmt.Printf("%v: %s\n",
 					classify(K, spl, Ham),
