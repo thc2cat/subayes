@@ -31,7 +31,7 @@ func main() {
 	flag.StringVar(&db, "db", "db", " db path")
 	// data is the file to be read when learning
 	flag.StringVar(&data, "d", "data", "data filename")
-	// choosing between learning Spam or Han (write db/classes files)
+	// choosing between learning Spam or Ham (write db/classes files)
 	flag.BoolVar(&learnSpam, "learnSpam", false, "Learn Spam subjects")
 	flag.BoolVar(&learnHam, "learnHam", false, "Learn Ham subjects")
 	flag.IntVar(&minlength, "m", 4, "word min length")

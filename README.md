@@ -1,46 +1,55 @@
-# Subayes
+# subayes
 
-Bayesian filter for mail subjects discrimination.
+Bayesian filter for mail subjects Ham/Spam discrimination.
 
 ## Context
 
 Spammer uses a lot of differents subjects, sometime with wrong spelling.
-Purpose of this filter is a learning filter able to sort spam subject lines.
+
+Purpose of this project is a filter able to identify spam/Ham mail subjects.
+
+## Basics
+
+```shell
+## Building
+$ go mod tidy && go build 
 
 ## Learning
-
-```shell
-
 $ rm db/Spam db/Ham
+$ ./subayes  -learnHam -d testdata/Ham -v
+INFO classifier corpus :  [ Ham -> 0 items ]
+INFO classifier corpus :  [ Ham -> 4623 items ]
+$ ./subayes  -learnSpam -d testdata/esteban.txt -v
+INFO classifier corpus :  [ Spam -> 0 items ]
+INFO classifier corpus :  [ Spam -> 1096 items ]
 
-$ ./subayes.exe -learnHam -d testdata/Ham -v
-
-$ ./subayes.exe -learnSpam -d testdata/esteban.txt -v
-
-
-```
-
-## Extraction des Spam
-
-```shell
-
-$ ./subayes.exe < testdata/2023-05  | grep Spam | wc -l
-58711
-
+## Spam detection
+$ ./subayes < testdata/2023-05  | grep -c Spam
+59213
 $ wc -l 2023-05
 241662 2023-05 ( meaning 24% Spam, WTF! )
 
+## Relearning
+$ ./subayes -learnHam -d testdata/Ham-rajout-1.txt -v
+INFO classifier corpus :  [ Ham -> 4623 items ]
+INFO classifier corpus :  [ Ham -> 4718 items ]
+$ ./subayes < testdata/2023-05  | grep -c Spam
+58240
+
 ```
 
-## Réapprentissage
+## Usage
+
+Use
+[utf8submimedecode](https://github.com/thc2cat/utf8submimedecode)
+filter to decode  utf8 encoded subjects lines.
+
+ex-pat contains lines to ignore patterns ( like Spam, or already detected accounts ).
+
+subjects.sed is a sed script extracting subjects from log line.
 
 ```shell
-
-$ ./subayes.exe -learnHam -d testdata/Ham-rajout-1.txt -v
-INFO classifier corpus :  [ Ham -> 4623 items ] [ Spam -> 0 items ]
-INFO classifier corpus :  [ Ham -> 4718 items ] [ Spam -> 0 items ]
-
-$ ./subayes.exe < 2023-05  | grep Spam | wc -l
-58149
-
+logs/partage$ rg -z clamav  sftp_logs/$LOGDATE/*clamav.log* | rg -vf ex-pat |\
+ sed -f subjects.sed  | utf8submimedecode | sort -u | subayes | rg Spam | \
+ tee  subayes.spam | mail -E -s "[subayes detection]" postmaster
 ```
