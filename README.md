@@ -44,7 +44,7 @@ Use
 [utf8submimedecode](https://github.com/thc2cat/utf8submimedecode)
 filter to decode  utf8 encoded subjects lines.
 
-ex-pat contains lines to ignore patterns ( like Spam, or already detected accounts ).
+ex-pat contains lines to ignore patterns ( like Spam, or already detected users ).
 
 subjects.sed is a sed script extracting subjects from log line.
 
@@ -52,4 +52,27 @@ subjects.sed is a sed script extracting subjects from log line.
 logs/partage$ rg -z clamav  sftp_logs/$LOGDATE/*clamav.log* | rg -vf ex-pat |\
  sed -f subjects.sed  | utf8submimedecode | sort -u | subayes | rg Spam | \
  tee  subayes.spam | mail -E -s "[subayes detection]" postmaster
+
+# Learning more Ham words :  
+
+logs/partage$ rg -z clamav  sftp_logs/$DATES/*clamav.log*  | rg -vf ex-pat|\
+ sed -f subjects.sed  | utf8submimedecode | sort -u | subayes | rg Spam |\
+ cut -c7- | tee subayes.spam 
+
+ # edit ex-pat ( when you find new spammer address )
+
+ # edit subayes.spam  (when you have false positives and relearn :)
+
+logs/partage$ subayes  -v -learnHam -d subayes.spam                                                                                                            
+
+# Efficiency :
+
+logs/partage$  subayes < /tmp/Hacked-account-Subjects | cut -d: -f1 | sort | uniq -c
+5658 Ham
+39016 Spam ( meaning 85% detection without false positives from filtered subjects)
+                  
 ```
+
+## Next move
+
+Using this db for a postfix milter that would defer these subjects ?
