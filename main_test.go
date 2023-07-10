@@ -25,6 +25,8 @@ func Test_split(t *testing.T) {
 		{"real4", "Vaše vlastné dievča lokálne", []string{"Vaše", "vlastné", "dievča", "lokálne"}},
 		{"real5", "Compañeras własne Zdobądź nära pobliżu",
 			[]string{"Compañeras", "własne", "Zdobądź", "nära", "pobliżu"}},
+		{"apostrophes", "Parlez avec des meufs pour s’envoyer en l’air dès maintenant",
+			[]string{"Parlez", "avec", "des", "meufs", "pour", "s", "envoyer", "en", "l", "air", "dès", "maintenant"}},
 	}
 	// TODO: Add test cases.
 

@@ -4,6 +4,7 @@ package main
 //
 // v0.1 : working draft.
 // v0.2 : minlen words, better split func, default bayes class, +main_test.go
+// v0.3 : -E options for explaining and showing scores
 
 import (
 	"bufio"
@@ -17,12 +18,14 @@ import (
 )
 
 var (
-	db, data                     string
-	learnSpam, learnHam, verbose bool
-	Spam                         bayesian.Class = "Spam"
-	Ham                          bayesian.Class = "Ham"
-	words                                       = regexp.MustCompile("[\\p{L}]+")
-	minlength                                   = 4
+	db, data            string
+	learnSpam, learnHam bool
+	explain, verbose    bool
+	Spam                bayesian.Class = "Spam"
+	Ham                 bayesian.Class = "Ham"
+	minlength                          = 4
+	// words = regexp.MustCompile("[\\p{L}]+")
+	words = regexp.MustCompile(`[\p{L}]+`)
 )
 
 func main() {
@@ -30,11 +33,13 @@ func main() {
 	// db is classes data store path
 	flag.StringVar(&db, "db", "db", " db path")
 	// data is the file to be read when learning
-	flag.StringVar(&data, "d", "data", "data filename")
+	flag.StringVar(&data, "d", "subayes.spam", "data filename")
 	// choosing between learning Spam or Ham (write db/classes files)
-	flag.BoolVar(&learnSpam, "learnSpam", false, "Learn Spam subjects")
-	flag.BoolVar(&learnHam, "learnHam", false, "Learn Ham subjects")
+	flag.BoolVar(&learnSpam, "learnSpam", false, "learn Spam subjects")
+	flag.BoolVar(&learnHam, "learnHam", false, "learn Ham subjects")
 	flag.IntVar(&minlength, "m", 4, "word min length")
+
+	flag.BoolVar(&explain, "E", false, "explain words scores")
 
 	flag.BoolVar(&verbose, "v", false, "verbose")
 
@@ -46,7 +51,7 @@ func main() {
 	switch {
 
 	case learnHam && learnSpam:
-		errcheck(errors.New("Please choose learn Ham or Spam, not Both !"))
+		errcheck(errors.New("please choose learn Ham or Spam, not Both"))
 
 	case learnHam:
 		errcheck(learn(K, db, data, Ham))
@@ -73,6 +78,10 @@ func main() {
 				fmt.Printf("%v: %s\n",
 					classify(K, spl, Ham),
 					text)
+			} else {
+				if verbose {
+					fmt.Fprintf(os.Stderr, "Warning short string : \"%s\"", text)
+				}
 			}
 		}
 		if err := scanner.Err(); err != nil {
@@ -83,7 +92,7 @@ func main() {
 
 func learn(c *bayesian.Classifier, xdb string, input string, class bayesian.Class) (err error) {
 
-	err = c.ReadClassFromFile(class, xdb)
+	c.ReadClassFromFile(class, xdb)
 	// if db/class don't exist, we will create it, so any err is acceptable
 	// errcheck(err)
 	// Better error handling should test error for acceptables ones
@@ -104,10 +113,27 @@ func learn(c *bayesian.Classifier, xdb string, input string, class bayesian.Clas
 	return nil
 }
 func classify(c *bayesian.Classifier, pattern []string, d bayesian.Class) bayesian.Class {
-	//  ProbScores return scores ([]float64), indexofclass, strict(?)
 	if len(pattern) == 0 { // return default class
+		if verbose {
+			fmt.Fprintf(os.Stderr, "Warning Empty pattern\n")
+		}
 		return d
 	}
+
+	if explain {
+
+		for _, word := range pattern {
+			var wordarr []string
+			wordarr = append(wordarr, word)
+			scores, likelyb, _ := c.ProbScores(wordarr)
+			fmt.Fprintf(os.Stderr, "[ %s = %s ] : ", word, c.Classes[likelyb])
+			for i := 0; i < len(c.Classes); i++ {
+				fmt.Fprintf(os.Stderr, "[%v]{ %.4f } ", c.Classes[i], scores[i])
+			}
+			fmt.Fprintf(os.Stderr, "\n")
+		}
+	}
+	//  ProbScores return scores ([]float64), indexofclass, strict(?)
 	_, likelyb, _ := c.ProbScores(pattern)
 	return c.Classes[likelyb]
 }
