@@ -1,7 +1,7 @@
 # Subayes
 
 Bayesian filter for mail subjects Ham/Spam discrimination using
-[golang brukh/bayesian lib](https://github.com/brukh/bayesian). 
+[golang jbrukh/bayesian lib](https://github.com/jbrukh/bayesian).
 
 ![go.yml](https://github.com/thc2cat/subayes/actions/workflows/go.yml/badge.svg)
 
