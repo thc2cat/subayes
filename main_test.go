@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"reflect"
 	"testing"
 
@@ -44,9 +45,13 @@ func Test_most(t *testing.T) {
 	verbose = true
 	K := bayesian.NewClassifier(Ham, Spam)
 
-	errcheck(K.ReadClassFromFile(Spam, "db"))
-	errcheck(K.ReadClassFromFile(Ham, "db"))
-	showClassesCount(K)
+	if _, err := os.Stat("db"); !os.IsNotExist(err) {
+		// path/to/whatever does not exist
+		errcheck(K.ReadClassFromFile(Spam, "db"))
+		errcheck(K.ReadClassFromFile(Ham, "db"))
+		showClassesCount(K)
+	}
+
 }
 
 func Test_removeDuplicate(t *testing.T) {
