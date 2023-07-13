@@ -14,7 +14,8 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/navossoc/bayesian"
+	// Credits for "github.com/jbrukh/bayesian"
+	"github.com/jbrukh/bayesian"
 )
 
 var (

@@ -2,4 +2,4 @@ module projects/subayes
 
 go 1.20
 
-require github.com/navossoc/bayesian v0.0.0-20230423142728-ab66f8feaf97
+require github.com/jbrukh/bayesian v0.0.0-20200318221351-d726b684ca4a

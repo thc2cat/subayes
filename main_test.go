@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/navossoc/bayesian"
+	"github.com/jbrukh/bayesian"
 )
 
 func Test_split(t *testing.T) {

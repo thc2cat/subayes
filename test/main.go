@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/navossoc/bayesian"
+	"github.com/jbrukh/bayesian"
 )
 
 const (
