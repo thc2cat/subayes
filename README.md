@@ -18,7 +18,7 @@ Purpose of this project is a classifier able to learn/identify spam/Ham mail sub
 $ go mod tidy && go build 
 
 ## Learning
-$ rm db/Spam db/Ham
+$ rm db/Spam db/Ham ; mkdir db
 $ ./subayes  -learnHam -d testdata/Ham -v
 INFO classifier corpus :  [ Ham -> 0 items ]
 INFO classifier corpus :  [ Ham -> 4623 items ]
