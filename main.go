@@ -5,6 +5,9 @@ package main
 // v0.1 : working draft.
 // v0.2 : minlen words, better split func, default bayes class, +main_test.go
 // v0.3 : -E options for explaining and showing scores
+//
+// TODO :
+// - how to remove item from db ?
 
 import (
 	"bufio"
@@ -14,7 +17,7 @@ import (
 	"os"
 	"regexp"
 
-	// Credits for "github.com/jbrukh/bayesian"
+	// Credits to "github.com/jbrukh/bayesian"
 	"github.com/jbrukh/bayesian"
 )
 
@@ -25,8 +28,9 @@ var (
 	Spam                bayesian.Class = "Spam"
 	Ham                 bayesian.Class = "Ham"
 	minlength                          = 4
-	// words = regexp.MustCompile("[\\p{L}]+")
+
 	words = regexp.MustCompile(`[\p{L}]+`)
+	// See http://www.unicode.org/reports/tr44/#General_Category_Values
 )
 
 func main() {
@@ -136,6 +140,9 @@ func classify(c *bayesian.Classifier, pattern []string, d bayesian.Class) bayesi
 	}
 	//  ProbScores return scores ([]float64), indexofclass, strict(?)
 	_, likelyb, _ := c.ProbScores(pattern)
+	// Would testing strict should be done ?
+	// _, likelyb, strict := c.ProbScores(pattern)
+	// if false returning default class d ?
 	return c.Classes[likelyb]
 }
 
@@ -169,19 +176,6 @@ func split(s string) []string {
 	// words := regexp.MustCompile("[\\p{L}]+")
 	return words.FindAllString(s, -1)
 }
-
-// Generic version (string or int )
-// func removeDuplicate[T string | int](sliceList []T) []T {
-// 	allKeys := make(map[T]bool)
-// 	list := []T{}
-// 	for _, item := range sliceList {
-// 		if _, value := allKeys[item]; !value {
-// 			allKeys[item] = true
-// 			list = append(list, item)
-// 		}
-// 	}
-// 	return list
-// }
 
 // removeduplicate
 func removeDuplicate(sliceList []string, length int) []string {
