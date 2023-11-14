@@ -36,8 +36,8 @@ Usage of subayes:
   -v    verbose
 
 
-## Learning 
-$ rm db/Spam db/Ham && mkdir db
+## Learning
+$ rm db/Spam db/Ham ; mkdir db
 $ ./subayes  -learnHam -d testdata/Ham -v
 INFO classifier corpus :  [ Ham -> 0 items ]
 INFO classifier corpus :  [ Ham -> 4623 items ]
