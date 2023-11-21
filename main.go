@@ -95,6 +95,7 @@ func main() {
 	}
 }
 
+// learn ingest data file into bayesian class and save to classifier db
 func learn(c *bayesian.Classifier, xdb string, input string, class bayesian.Class) (err error) {
 
 	c.ReadClassFromFile(class, xdb)
@@ -117,6 +118,9 @@ func learn(c *bayesian.Classifier, xdb string, input string, class bayesian.Clas
 
 	return nil
 }
+
+// classify return bayesian Class of []string from a classifier
+// if explain option is given, it print out class score on stderr
 func classify(c *bayesian.Classifier, pattern []string, d bayesian.Class) bayesian.Class {
 	if len(pattern) == 0 { // return default class
 		if verbose {
@@ -146,6 +150,7 @@ func classify(c *bayesian.Classifier, pattern []string, d bayesian.Class) bayesi
 	return c.Classes[likelyb]
 }
 
+// showClassesCount display classes and item counts
 func showClassesCount(c *bayesian.Classifier) {
 	if !verbose {
 		return
@@ -162,6 +167,7 @@ func showClassesCount(c *bayesian.Classifier) {
 	fmt.Fprintln(os.Stderr)
 }
 
+// errcheck func perform basic error check
 func errcheck(e error) {
 	if e != nil {
 		fmt.Fprintf(os.Stderr, "%v", e)
@@ -169,6 +175,7 @@ func errcheck(e error) {
 	}
 }
 
+// split function return []string of words from string
 func split(s string) []string {
 	// 	return rxp.Split(s, -1)
 	// words := regexp.MustCompile("\\w+")
@@ -177,7 +184,8 @@ func split(s string) []string {
 	return words.FindAllString(s, -1)
 }
 
-// removeduplicate
+// removeDuplicate function remove duplicate entries from []string
+// and entries length must be > length parameter
 func removeDuplicate(sliceList []string, length int) []string {
 	allKeys := make(map[string]bool)
 	list := []string{}

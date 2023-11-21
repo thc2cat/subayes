@@ -1,4 +1,4 @@
-module projects/subayes
+module github.com/thc2cat/subayes
 
 go 1.20
 
