@@ -5,6 +5,7 @@ package main
 // v0.1 : working draft.
 // v0.2 : minlen words, better split func, default bayes class, +main_test.go
 // v0.3 : -E options for explaining and showing scores
+// v1.0 tag for go doc
 //
 // TODO :
 // - how to remove item from db ?
