@@ -1,2 +1,5 @@
 db/*
 subayes*
+testdata/*
+ShowCase/*
+Makefile
