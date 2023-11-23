@@ -41,7 +41,10 @@ func Test_split(t *testing.T) {
 }
 
 func Test_most(t *testing.T) {
-
+	var (
+		Spam bayesian.Class = "Spam"
+		Ham  bayesian.Class = "Ham"
+	)
 	verbose = true
 	K := bayesian.NewClassifier(Ham, Spam)
 
@@ -64,6 +67,7 @@ func Test_removeDuplicate(t *testing.T) {
 		{"basic", []string{"AAAA", "AAAA", "BBB"}, []string{"AAAA", "BBB"}, 3},
 		{"length3", []string{"A", "BBB", "CCC", "BBB"}, []string{"BBB", "CCC"}, 3},
 		{"length2", []string{"AA", "BBB", "CCC", "BBB"}, []string{"AA", "BBB", "CCC"}, 2},
+		{"with numbers", []string{"ceci", "contient", "1.999", "test", "10000", "excuses"}, []string{"ceci", "contient", "test", "excuses"}, 4},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

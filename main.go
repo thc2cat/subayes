@@ -1,3 +1,4 @@
+// Subayes main package is a bayesian cli build around github.com/jbrukh/bayesian
 package main
 
 // 2023/06 : cat : subayes : mail subject classification using bayesian filter
@@ -6,6 +7,7 @@ package main
 // v0.2 : minlen words, better split func, default bayes class, +main_test.go
 // v0.3 : -E options for explaining and showing scores
 // v1.0 tag for go doc
+// V1.1 : ignore numbers
 //
 // TODO :
 // - how to remove item from db ?
@@ -26,15 +28,14 @@ var (
 	db, data            string
 	learnSpam, learnHam bool
 	explain, verbose    bool
-	Spam                bayesian.Class = "Spam"
-	Ham                 bayesian.Class = "Ham"
-	minlength                          = 4
-
-	words = regexp.MustCompile(`[\p{L}]+`)
-	// See http://www.unicode.org/reports/tr44/#General_Category_Values
 )
 
 func main() {
+	var (
+		minlength                = 4
+		Spam      bayesian.Class = "Spam"
+		Ham       bayesian.Class = "Ham"
+	)
 
 	// db is classes data store path
 	flag.StringVar(&db, "db", "db", " db path")
@@ -60,11 +61,11 @@ func main() {
 		errcheck(errors.New("please choose learn Ham or Spam, not Both"))
 
 	case learnHam:
-		errcheck(learn(K, db, data, Ham))
+		errcheck(learn(K, db, data, Ham, minlength))
 		showClassesCount(K)
 
 	case learnSpam:
-		errcheck(learn(K, db, data, Spam))
+		errcheck(learn(K, db, data, Spam, minlength))
 		showClassesCount(K)
 
 	case !learnHam && !learnSpam:
@@ -97,7 +98,7 @@ func main() {
 }
 
 // learn ingest data file into bayesian class and save to classifier db
-func learn(c *bayesian.Classifier, xdb string, input string, class bayesian.Class) (err error) {
+func learn(c *bayesian.Classifier, xdb string, input string, class bayesian.Class, minilength int) (err error) {
 
 	c.ReadClassFromFile(class, xdb)
 	// if db/class don't exist, we will create it, so any err is acceptable
@@ -111,7 +112,7 @@ func learn(c *bayesian.Classifier, xdb string, input string, class bayesian.Clas
 	ins := string(in) // ins type is string
 
 	indata := split(ins) // indata is []string
-	indedup := removeDuplicate(indata, minlength)
+	indedup := removeDuplicate(indata, minilength)
 	c.Learn(indedup, class)
 
 	err = c.WriteClassToFile(class, xdb)
@@ -131,7 +132,6 @@ func classify(c *bayesian.Classifier, pattern []string, d bayesian.Class) bayesi
 	}
 
 	if explain {
-
 		for _, word := range pattern {
 			var wordarr []string
 			wordarr = append(wordarr, word)
@@ -143,6 +143,7 @@ func classify(c *bayesian.Classifier, pattern []string, d bayesian.Class) bayesi
 			fmt.Fprintf(os.Stderr, "\n")
 		}
 	}
+
 	//  ProbScores return scores ([]float64), indexofclass, strict(?)
 	_, likelyb, _ := c.ProbScores(pattern)
 	// Would testing strict should be done ?
@@ -178,6 +179,9 @@ func errcheck(e error) {
 
 // split function return []string of words from string
 func split(s string) []string {
+	var words = regexp.MustCompile(`[\p{L}]+`)
+	// See http://www.unicode.org/reports/tr44/#General_Category_Values
+
 	// 	return rxp.Split(s, -1)
 	// words := regexp.MustCompile("\\w+")
 	// words := regexp.MustCompile("\\P{M}+")
@@ -188,9 +192,15 @@ func split(s string) []string {
 // removeDuplicate function remove duplicate entries from []string
 // and entries length must be > length parameter
 func removeDuplicate(sliceList []string, length int) []string {
+	var digits = regexp.MustCompile(`^[0-9\.]+$`)
+
 	allKeys := make(map[string]bool)
 	list := []string{}
 	for _, item := range sliceList {
+		if digits.MatchString(item) {
+			continue
+		}
+
 		if len(item) < length {
 			continue
 		}
