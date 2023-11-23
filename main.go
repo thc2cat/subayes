@@ -25,14 +25,14 @@ import (
 )
 
 var (
-	db, data            string
-	learnSpam, learnHam bool
-	explain, verbose    bool
+	db, data                              string // db Path, default datafile
+	learnSpam, learnHam, explain, verbose bool   // Flags
+	Version                               string // git tag via Makefile
 )
 
 func main() {
 	var (
-		minlength                = 4
+		minlength                = 4 // Minimal word length
 		Spam      bayesian.Class = "Spam"
 		Ham       bayesian.Class = "Ham"
 	)
@@ -49,6 +49,7 @@ func main() {
 	flag.BoolVar(&explain, "E", false, "explain words scores")
 
 	flag.BoolVar(&verbose, "v", false, "verbose")
+	flag.StringVar(&Version, "V", Version, "build version")
 
 	// Default is to read stdin line per line for classification
 	flag.Parse()
