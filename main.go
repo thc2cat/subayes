@@ -27,7 +27,6 @@ import (
 var (
 	db, data                              string // db Path, default datafile
 	learnSpam, learnHam, explain, verbose bool   // Flags
-	Version                               string // git tag via Makefile
 )
 
 func main() {
@@ -41,15 +40,13 @@ func main() {
 	flag.StringVar(&db, "db", "db", " db path")
 	// data is the file to be read when learning
 	flag.StringVar(&data, "d", "subayes.spam", "data filename")
+	flag.IntVar(&minlength, "m", 4, "word min length")
 	// choosing between learning Spam or Ham (write db/classes files)
 	flag.BoolVar(&learnSpam, "learnSpam", false, "learn Spam subjects")
 	flag.BoolVar(&learnHam, "learnHam", false, "learn Ham subjects")
-	flag.IntVar(&minlength, "m", 4, "word min length")
 
 	flag.BoolVar(&explain, "E", false, "explain words scores")
-
 	flag.BoolVar(&verbose, "v", false, "verbose")
-	flag.StringVar(&Version, "V", Version, "build version")
 
 	// Default is to read stdin line per line for classification
 	flag.Parse()
