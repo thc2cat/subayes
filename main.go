@@ -9,6 +9,7 @@ package main
 // v1.0 tag for go doc
 // V1.1 : ignore numbers
 // v1.2 : lowerCase for items
+// v1.3 : reading learn from Stdin if data filename is ""
 //
 // TODO :
 // - how to remove item from db ?
@@ -18,6 +19,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"regexp"
 	"strings"
@@ -27,8 +29,10 @@ import (
 )
 
 var (
-	db, data                              string // db Path, default datafile
-	learnSpam, learnHam, explain, verbose bool   // Flags
+	db, data            string // db Path, default datafile
+	learnSpam, learnHam bool
+	explain, verbose    bool
+	lowerCase           = true // Flags
 )
 
 func main() {
@@ -41,8 +45,10 @@ func main() {
 	// db is classes data store path
 	flag.StringVar(&db, "db", "db", " db path")
 	// data is the file to be read when learning
-	flag.StringVar(&data, "d", "subayes.spam", "data filename")
+	flag.StringVar(&data, "d", "", "read input from data filename (stdin if empty)")
 	flag.IntVar(&minlength, "m", 4, "word min length")
+	flag.BoolVar(&lowerCase, "l", lowerCase, "lowerCase items")
+
 	// choosing between learning Spam or Ham (write db/classes files)
 	flag.BoolVar(&learnSpam, "learnSpam", false, "learn Spam subjects")
 	flag.BoolVar(&learnHam, "learnHam", false, "learn Ham subjects")
@@ -106,7 +112,14 @@ func learn(c *bayesian.Classifier, xdb string, input string, class bayesian.Clas
 	// Better error handling should test error for acceptables ones
 	showClassesCount(c)
 
-	in, err := os.ReadFile(input) // in  type is []byte
+	var in []byte
+
+	if len(input) != 0 {
+		in, err = os.ReadFile(input) // in  type is []byte
+	} else {
+		in, err = io.ReadAll(os.Stdin)
+	}
+
 	errcheck(err)
 
 	ins := string(in) // ins type is string
@@ -204,10 +217,14 @@ func removeDuplicate(sliceList []string, length int) []string {
 		if len(item) < length {
 			continue
 		}
-		low := strings.ToLower(item)
-		if _, value := allKeys[low]; !value {
-			allKeys[low] = true
-			list = append(list, low)
+
+		if lowerCase {
+			item = strings.ToLower(item)
+		}
+
+		if _, value := allKeys[item]; !value {
+			allKeys[item] = true
+			list = append(list, item)
 		}
 	}
 	return list

@@ -73,7 +73,7 @@ func Test_removeDuplicate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := removeDuplicate(tt.array, tt.length); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("removeDuplicate() = %v, want %v", got, tt.want)
+				t.Errorf("removeDuplicate() gave %v, we want %v", got, tt.want)
 			}
 		})
 	}
