@@ -64,9 +64,10 @@ func Test_removeDuplicate(t *testing.T) {
 		want   []string
 		length int
 	}{
-		{"basic", []string{"AAAA", "AAAA", "BBB"}, []string{"AAAA", "BBB"}, 3},
-		{"length3", []string{"A", "BBB", "CCC", "BBB"}, []string{"BBB", "CCC"}, 3},
-		{"length2", []string{"AA", "BBB", "CCC", "BBB"}, []string{"AA", "BBB", "CCC"}, 2},
+		// WARNING : lowercase since V1.2
+		{"basic", []string{"AAAA", "AAAA", "BBB"}, []string{"aaaa", "bbb"}, 3},
+		{"length3", []string{"A", "BBB", "CCC", "BBB"}, []string{"bbb", "ccc"}, 3},
+		{"length2", []string{"AA", "BBB", "CCC", "BBB"}, []string{"aa", "bbb", "ccc"}, 2},
 		{"with numbers", []string{"ceci", "contient", "1.999", "test", "10000", "excuses"}, []string{"ceci", "contient", "test", "excuses"}, 4},
 	}
 	for _, tt := range tests {

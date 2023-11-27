@@ -8,6 +8,7 @@ package main
 // v0.3 : -E options for explaining and showing scores
 // v1.0 tag for go doc
 // V1.1 : ignore numbers
+// v1.2 : lowerCase for items
 //
 // TODO :
 // - how to remove item from db ?
@@ -19,6 +20,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strings"
 
 	// Credits to "github.com/jbrukh/bayesian"
 	"github.com/jbrukh/bayesian"
@@ -202,9 +204,10 @@ func removeDuplicate(sliceList []string, length int) []string {
 		if len(item) < length {
 			continue
 		}
-		if _, value := allKeys[item]; !value {
-			allKeys[item] = true
-			list = append(list, item)
+		low := strings.ToLower(item)
+		if _, value := allKeys[low]; !value {
+			allKeys[low] = true
+			list = append(list, low)
 		}
 	}
 	return list
