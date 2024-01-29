@@ -1,6 +1,8 @@
 # Subayes
 
-This is a naive bayesian classifier for mail subjects. Ham/Spam discrimination using
+This is a naive bayesian classifier for mail subjects.
+
+Ham/Spam discrimination using
 [golang jbrukh/bayesian lib](https://github.com/jbrukh/bayesian).
 
 ![go.yml](https://github.com/thc2cat/subayes/actions/workflows/go.yml/badge.svg)
@@ -10,9 +12,11 @@ This is a naive bayesian classifier for mail subjects. Ham/Spam discrimination u
 
 Spammer uses a lot of differents subjects, sometime with wrong spelling and garbage.
 
-Purpose of this project is a basic classifier able to detect spam from mail subjects.
+Purpose of this project is a basic classifier able to detect spam from mail subjects better than grep.
 
 subayes read stdin line and output them on stdout with prefix "Spam: " or "Ham: ".
+
+**Training db is really important, unknown words will be classified with most learned class.**
 
 ## Basics
 
