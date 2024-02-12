@@ -7,22 +7,24 @@ import (
 )
 
 const (
-	Good bayesian.Class = "Good"
-	Bad  bayesian.Class = "Bad"
+	Rich bayesian.Class = "Rich"
+	Poor bayesian.Class = "Poor"
 	// Grey bayesian.Class = "Grey"
 )
 
 func main() {
 
-	classifier := bayesian.NewClassifier(Good, Bad)
+	classifier := bayesian.NewClassifier(Rich, Poor)
 
 	goodStuff := []string{"tall", "rich", "handsome", "tennis", "chicken", "theatre", "reading", "books", "money", "suits", "golf", "eating", "wine"}
 	badStuff := []string{"poor", "smelly", "ugly", "playing", "games", "burgers", "tv", "magazines", "debts", "jogging", "foot", "drinking", "beer", "Zdob<C4><85>d<C5><BA>pobli\xc5\xbcu"}
 	greyStuff := []string{"man", "girl", "young", "citizen"}
+	other := []string{"ski", "jetski", "restaurant", "travels", "museum", "palace"}
 
-	classifier.Learn(goodStuff, Good)
-	classifier.Learn(badStuff, Bad)
-	classifier.Learn(greyStuff, Bad)
+	classifier.Learn(goodStuff, Rich)
+	classifier.Learn(badStuff, Poor)
+	classifier.Learn(greyStuff, Poor)
+	classifier.Learn(other, Rich)
 
 	// classifier.Learn(greyStuff, Grey)
 
@@ -39,7 +41,7 @@ func main() {
 	tests := [][]string{
 		{"tall", "girl", "watching", "tv", "eating", "chicken", "wearing", "jogging"},
 		{"small", "handsome", "man", "playing", "games", "before", "tv"},
-		{"unknows", "words"},
+		{"unknown", "words"},
 	}
 
 	for _, pattern := range tests {
@@ -47,10 +49,11 @@ func main() {
 		fmt.Printf("test : %v\n", pattern)
 
 		probs, likelyb, _ := classifier.ProbScores(pattern)
-		fmt.Printf("probs ")
+
 		for i := 0; i < len(classifier.Classes); i++ {
 			fmt.Printf("%s(%.2f) ",
 				classifier.Classes[i], probs[i])
+
 		}
 		fmt.Printf("=> Class : %s\n\n",
 			classifier.Classes[likelyb])
