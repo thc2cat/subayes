@@ -1,8 +1,18 @@
 # Subayes
 
+[subayes](https://github.com/thc2cat/subayes) is a command-line tool that uses a Bayesian filter to classify email subjects as either "Ham" (legitimate) or "Spam" (unsolicited/junk).
+
+It learns from a user-provided training dataset of pre-classified subjects, building a statistical model of word frequencies associated with each category.
+
+Once trained, subayes can analyze new, unseen subjects and provide a probability score indicating the likelihood of them being spam.
+
+This allows mail admins to quickly identify users sending spam based on their email subjects.
+
+The tool offers options for training the filter, classifying individual subjects, and even batch processing a list of subjects from a file, making it a versatile solution for the discovery of spam leaks.
+
 This is a naive bayesian classifier for mail subjects.
 
-Ham/Spam discrimination using
+bayesian work is done with
 [golang jbrukh/bayesian lib](https://github.com/jbrukh/bayesian).
 
 ![go.yml](https://github.com/thc2cat/subayes/actions/workflows/go.yml/badge.svg)
@@ -32,9 +42,9 @@ Usage of subayes:
         data filename (default "subayes.spam")
   -db string
          db path (default "db")
-  -learnHam
+  -H
         learn Ham subjects
-  -learnSpam
+  -S
         learn Spam subjects
   -m int
         word min length (default 4)

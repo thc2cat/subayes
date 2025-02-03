@@ -1,5 +1,6 @@
 db/*
 subayes*
 testdata/*
+test/*
 ShowCase/*
 Makefile

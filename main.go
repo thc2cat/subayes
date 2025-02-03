@@ -10,6 +10,7 @@ package main
 // V1.1 : ignore numbers
 // v1.2 : lowerCase for items
 // v1.3 : reading learn from Stdin if data filename is ""
+// v1.31 : db path default to /local/subayes/db
 //
 // TODO :
 // - how to remove item from db ?
@@ -43,18 +44,17 @@ func main() {
 	)
 
 	// db is classes data store path
-	flag.StringVar(&db, "db", "db", " db path")
+	flag.StringVar(&db, "db","/local/subayes/db", "db path")
 	// data is the file to be read when learning
 	flag.StringVar(&data, "d", "", "read input from data filename (stdin if empty)")
 	flag.IntVar(&minlength, "m", 4, "word min length")
 	flag.BoolVar(&lowerCase, "l", lowerCase, "lowerCase items")
 
 	// choosing between learning Spam or Ham (write db/classes files)
-	flag.BoolVar(&learnSpam, "learnSpam", false, "learn Spam subjects")
-	flag.BoolVar(&learnHam, "learnHam", false, "learn Ham subjects")
-
-	flag.BoolVar(&explain, "E", false, "explain words scores")
-	flag.BoolVar(&verbose, "v", false, "verbose")
+	flag.BoolVar(&learnSpam, "S", false, "learn Spam subjects")
+	flag.BoolVar(&learnHam,  "H", false, "learn Ham subjects")
+	flag.BoolVar(&explain,   "E", false, "explain words scores")
+	flag.BoolVar(&verbose,   "v", false, "verbose")
 
 	// Default is to read stdin line per line for classification
 	flag.Parse()
