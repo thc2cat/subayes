@@ -20,7 +20,7 @@ bayesian work is done with
 
 ## Context
 
-Spammer uses a lot of differents subjects, sometime with wrong spelling and garbage.
+Spammer uses a lot of subjects, sometime with wrong spelling and garbage.
 
 Purpose of this project is a basic classifier able to detect spam from mail subjects better than grep.
 
